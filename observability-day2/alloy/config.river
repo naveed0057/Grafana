@@ -1,0 +1,24 @@
+# Grafana Alloy (River) example: scrape node-exporter & remote_write to Grafana Cloud.
+# Replace <GRAFANA_CLOUD_PROM_URL>, <INSTANCE_ID>, <API_KEY> with your account details.
+
+prometheus.scrape "node" {
+  targets = [
+    {
+      __address__ = "node-exporter:9100",
+    },
+  ]
+
+  # Send scraped metrics to remote_write
+  forward_to = [prometheus.remote_write.grafana.receiver]
+}
+
+prometheus.remote_write "grafana" {
+  endpoint {
+    url = "https://<GRAFANA_CLOUD_PROM_URL>/api/prom/push"
+
+    basic_auth {
+      username = "<INSTANCE_ID>" # Typically your Grafana Cloud Prometheus instance ID
+      password = "<API_KEY>"     # Grafana Cloud API key with metrics:write
+    }
+  }
+}
