@@ -31,14 +31,4 @@ groups:
 
 
 
-groups:
-  - name: test-alert
-    rules:
-      - alert: TestAlert
-        expr: vector(1)
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          summary: "This is a test alert"
 
