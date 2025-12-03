@@ -1,0 +1,44 @@
+
+groups:
+  - name: example-alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: instance:node_cpu_utilization:avg5m > 0.85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage > 85% for 2 minutes (avg over 5m)."
+
+      - alert: HighMemoryUtilization
+        expr: instance:node_memory_utilization:ratio > 0.90
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High memory utilization on {{ $labels.instance }}"
+          description: "Memory utilization > 90% for 5 minutes."
+
+      - alert: PrometheusHighRequestRate
+        expr: job:prometheus_http_request_rate:5m > 20
+        for: 2m
+        labels:
+          severity: info
+        annotations:
+          summary: "High Prometheus request rate"
+          description: "Request rate above 20 req/s for 2 minutes — check scrapes / dashboards."
+
+
+
+groups:
+  - name: test-alert
+    rules:
+      - alert: TestAlert
+        expr: vector(1)
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "This is a test alert"
+

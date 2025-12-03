@@ -1,0 +1,16 @@
+
+groups:
+  - name: node-recording-rules
+    rules:
+      # CPU utilization (per instance) over 5m window: 1 - idle
+      - record: instance:node_cpu_utilization:avg5m
+        expr: 1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))
+
+      # Memory utilization (per instance): used / total
+      - record: instance:node_memory_utilization:ratio
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes
+
+      # Prometheus HTTP request rate (by handler)
+      - record: job:prometheus_http_request_rate:5m
+        expr: sum by (job, instance, handler) (rate(prometheus_http_requests_total[5m]))
+
